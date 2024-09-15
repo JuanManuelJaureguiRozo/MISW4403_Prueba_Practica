@@ -26,7 +26,8 @@ export class AerolineaService {
     }
    
     async create(aerolinea: AerolineaEntity): Promise<AerolineaEntity> {
-        if (aerolinea.fecha_fundacion > new Date()) {
+
+        if (new Date(aerolinea.fecha_fundacion) > new Date()) {
             throw new BusinessLogicException("The aerolinea's foundation date must be in the past", BusinessError.PRECONDITION_FAILED);
         }
         return await this.aerolineaRepository.save(aerolinea);
@@ -37,7 +38,7 @@ export class AerolineaService {
         if (!persistedAerolinea)
           throw new BusinessLogicException("The aerolinea with the given id was not found", BusinessError.NOT_FOUND);
 
-        if (aerolinea.fecha_fundacion > new Date()) {
+        if (new Date(aerolinea.fecha_fundacion) > new Date()) {
             throw new BusinessLogicException("The aerolinea's foundation date must be in the past", BusinessError.PRECONDITION_FAILED);
         }
        

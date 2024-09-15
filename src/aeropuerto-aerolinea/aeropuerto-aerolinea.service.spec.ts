@@ -77,7 +77,7 @@ describe('AeropuertoAerolineaService', () => {
     expect(result.aerolineas[0]).not.toBeNull();
     expect(result.aerolineas[0].nombre).toBe(newAerolinea.nombre);
     expect(result.aerolineas[0].descripcion).toBe(newAerolinea.descripcion);
-    expect(result.aerolineas[0].fecha_fundacion).toBe(newAerolinea.fecha_fundacion);
+    expect(result.aerolineas[0].fecha_fundacion).toStrictEqual(newAerolinea.fecha_fundacion);
     expect(result.aerolineas[0].pagina_web).toBe(newAerolinea.pagina_web);
   });
 
@@ -109,7 +109,7 @@ describe('AeropuertoAerolineaService', () => {
     expect(storedAerolinea).not.toBeNull();
     expect(storedAerolinea.nombre).toBe(aerolinea.nombre);
     expect(storedAerolinea.descripcion).toBe(aerolinea.descripcion);
-    expect(storedAerolinea.fecha_fundacion).toBe(aerolinea.fecha_fundacion);
+    expect(storedAerolinea.fecha_fundacion).toStrictEqual(aerolinea.fecha_fundacion);
     expect(storedAerolinea.pagina_web).toBe(aerolinea.pagina_web);
   });
 
