@@ -1,0 +1,1253 @@
+{
+	"info": {
+		"_postman_id": "df1d35c1-998f-41dd-9b2a-252665e1d3f0",
+		"name": "Airlines and Airports",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26460888"
+	},
+	"item": [
+		{
+			"name": "Airline",
+			"item": [
+				{
+					"name": "Add airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"AIRLINE_ID\", data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Avianca\",\r\n    \"descripcion\": \"Una aerolínea Colombiana\",\r\n    \"fecha_fundacion\": \"1950-09-14\",\r\n    \"pagina_web\": \"https://www.avianca.com/es/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add invalid airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {\r",
+									"    pm.response.to.have.status(412);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aerolinea's foundation date must be in the past\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Avianca\",\r\n    \"descripcion\": \"Una aerolínea Colombiana\",\r\n    \"fecha_fundacion\": \"2025-09-14\",\r\n    \"pagina_web\": \"https://www.avianca.com/es/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all airlines",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Number of airlines > ' + 0, function () {\r",
+									"    var data = pm.response.json()\r",
+									"    pm.expect(data.length).to.greaterThan(0)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get an invalid airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aerolinea with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Avianca\",\r\n    \"descripcion\": \"Una aerolínea Colombiana con visión la futuro\",\r\n    \"fecha_fundacion\": \"2024-09-14\",\r\n    \"pagina_web\": \"https://www.avianca.com/es/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an invalid airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aerolinea with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Avianca\",\r\n    \"descripcion\": \"Una aerolínea Colombiana y con visión al futuro\",\r\n    \"fecha_fundacion\": \"2024-09-14\",\r\n    \"pagina_web\": \"https://www.avianca.com/es/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an invalid airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aerolinea with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Airport",
+			"item": [
+				{
+					"name": "Add airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"AIRPORT_ID\", data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Orlando International Airport\",\r\n    \"codigo\": \"MCO\",\r\n    \"pais\": \"Estados Unidos\",\r\n    \"ciudad\": \"Orlando\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add invalid airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {\r",
+									"    pm.response.to.have.status(412);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto code must be exactly 3 characters long\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Orlando International Airport\",\r\n    \"codigo\": \"MCOOO\",\r\n    \"pais\": \"Estados Unidos\",\r\n    \"ciudad\": \"Orlando\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all airports",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Number of airports > ' + 0, function () {\r",
+									"    var data = pm.response.json()\r",
+									"    pm.expect(data.length).to.greaterThan(0)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports/{{AIRPORT_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports",
+								"{{AIRPORT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get an invalid airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Orlando International Airport\",\r\n    \"codigo\": \"MCO\",\r\n    \"pais\": \"Estados Unidos\",\r\n    \"ciudad\": \"Orlando, Florida\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports/{{AIRPORT_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports",
+								"{{AIRPORT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an invalid airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Orlando International Airport\",\r\n    \"codigo\": \"MCO\",\r\n    \"pais\": \"Estados Unidos\",\r\n    \"ciudad\": \"Orlando, Florida\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports/{{AIRPORT_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports",
+								"{{AIRPORT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an invalid airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Airline-Airport",
+			"item": [
+				{
+					"name": "Add a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"AIRLINE_ID\", data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Avianca\",\r\n    \"descripcion\": \"Una aerolínea Colombiana\",\r\n    \"fecha_fundacion\": \"2024-09-14\",\r\n    \"pagina_web\": \"https://www.avianca.com/es/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a airport",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"AIRPORT_ID\", data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Orlando International Airport\",\r\n    \"codigo\": \"MCO\",\r\n    \"pais\": \"Estados Unidos\",\r\n    \"ciudad\": \"Orlando\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a airport 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"AIRPORT2_ID\", data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Miami International Airport\",\r\n    \"codigo\": \"MIA\",\r\n    \"pais\": \"Estados Unidos\",\r\n    \"ciudad\": \"Miami\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add airport to a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/{{AIRPORT_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								"{{AIRPORT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add an invalid airport to a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/00000000-0000-0000-0000-000000000000",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all airports of a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get airport of a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/{{AIRPORT_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								"{{AIRPORT_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a airport non-associated to a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {\r",
+									"    pm.response.to.have.status(412);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id is not associated to the aerolinea\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/{{AIRPORT2_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								"{{AIRPORT2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update airports of a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": \"{{AIRPORT2_ID}}\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update invalid airports of a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id was not found\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"id\": \"00000000-0000-0000-0000-000000000000\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a airport of a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/{{AIRPORT2_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								"{{AIRPORT2_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a airport non-associated to a airline",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 412\", function () {\r",
+									"    pm.response.to.have.status(412);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get expected error message\", function () {\r",
+									"    var data = pm.response.json();\r",
+									"    pm.expect(data.message).to.eql(\"The aeropuerto with the given id is not associated to the aerolinea\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}/airlines/{{AIRLINE_ID}}/airports/{{AIRPORT_ID}}",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"airlines",
+								"{{AIRLINE_ID}}",
+								"airports",
+								"{{AIRPORT_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "localhost:3000/api/v1",
+			"type": "string"
+		}
+	]
+}
